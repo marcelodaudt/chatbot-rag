@@ -4,7 +4,7 @@ This application was developed for semantic searches in vector databases.
 
 An intelligent assistant with R.A.G. was also developed.
 
-**R.A.G.**Was deve (Retrieval Augmented Generation)
+**R.A.G.** (Retrieval Augmented Generation)
 
 ## Features:
 
