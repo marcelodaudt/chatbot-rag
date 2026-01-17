@@ -20,33 +20,7 @@ python -m venv venv
 source venv/bin/activate
 ```
 
-## INSTALAR OpenAI
+## EXECUTAR O REQUIRIMENTS
 ```bash
-pip install openai
-```
-
-## INSTALAR O Pinecone
-```bash
-pip install "pinecone[grpc]"
-```
-
-## INSTALAR python-dotenv PARA PODER ACESSAR AS VARIÁVEIS DO ARQUIVO .env
-```bash
-pip install python-dotenv
-```
-
-## INSTALAR fastapi E O uvicorn -> transforma a aplicação em um site
-```bash
-pip install fastapi uvicorn
-```
-
-### INSTALAR PyPDF2 PARA CONVERTER PDF PARA TEXTO
-```bash
-pip install PyPDF2
-pip install python-multipart
-```
-
-### ATUALIZAR OS REQUISITOS
-```bash
-$ pip freeze > requirements.txt
+pip install -r requirements.txt
 ```
