@@ -7,7 +7,8 @@ pc = authentication_pinecone()
 def upsertService(embeddings: list):
 
     # Obs.: RECOMENDAÇÃO: usar o HOST do Índice no Pinecone, não o NAME do Índice - recomendado pelo próprio Pinecone
-    index = pc.Index(host="https://itvalleyschool-k6qbag2.svc.aped-4627-b74a.pinecone.io")
+    #index = pc.Index(host="https://itvalleyschool-k6qbag2.svc.aped-4627-b74a.pinecone.io")
+    index = pc.Index(host="https://base-de-conhecimentos-chamados-1-k6qbag2.svc.aped-4627-b74a.pinecone.io")
 
     try:
 
@@ -26,7 +27,8 @@ def upsertService(embeddings: list):
     
 def upsertService_metadata(metadata: dict, chunkslistText: list):
 
-    index = pc.Index(host="https://itvalleyschool-k6qbag2.svc.aped-4627-b74a.pinecone.io")
+    #index = pc.Index(host="https://itvalleyschool-k6qbag2.svc.aped-4627-b74a.pinecone.io")
+    index = pc.Index(host="https://base-de-conhecimentos-chamados-1-k6qbag2.svc.aped-4627-b74a.pinecone.io")
 
     try:
 

@@ -1,10 +1,13 @@
 from fastapi import APIRouter, File, UploadFile, Form
-from services.miscellaneousService import extract_text_from_pdf
+from services.miscellaneousService import extract_text_from_pdf, extract_text_from_txt
 from api.miscellaneousRouter import split_in_chunks_embeddings, split_in_chunks_simple
 from services.upsertService import upsertService, upsertService_metadata
 import json
 
 router = APIRouter()
+
+### ARQUIVOS PDF
+################
 
 @router.post('/api/upsert/pdf', summary="SERVIÇO: Inserindo (upsert) um documento PDF no Banco de Dados (upsert a document PDF into the database).")
 async def upsert(filepdf: UploadFile = File(...)):
@@ -22,6 +25,34 @@ async def upsert_metadata(filepdf: UploadFile = File(...), metadata: str = Form(
         metadataJson = json.loads(metadata)
         textfromPDF = extract_text_from_pdf(filepdf)
         chunkslistText = await split_in_chunks_simple(text=textfromPDF)
+        response = upsertService_metadata(metadata=metadataJson, chunkslistText=chunkslistText)
+        
+        #return response
+        return {"message": f"Successfully upserted {response} documents"}
+
+    except Exception as e:
+
+        return {"error": str(e)}
+
+### ARQUIVOS TXT
+################
+
+@router.post('/api/upsert/txt', summary="SERVIÇO: Inserindo (upsert) um documento TXT no Banco de Dados (upsert a document TXT into the database).")
+async def upsert(filetxt: UploadFile = File(...)):
+
+    textfromTXT = extract_text_from_txt(filetxt)
+    chunkslistEmbeddings = await split_in_chunks_embeddings(text=textfromTXT)
+    response = upsertService(embeddings=chunkslistEmbeddings)
+    
+    return response
+
+@router.post('/api/upsert/txt_metadata', summary="SERVIÇO: Inserindo (upsert) um documento TXT no Banco de Dados com Metadados (upsert a document TXT into the database with metadata).")
+async def upsert_metadata(filetxt: UploadFile = File(...), metadata: str = Form(...)):      # Form(...) = Formulário
+
+    try:
+        metadataJson = json.loads(metadata)
+        textfromTXT = extract_text_from_txt(filetxt)
+        chunkslistText = await split_in_chunks_simple(text=textfromTXT)
         response = upsertService_metadata(metadata=metadataJson, chunkslistText=chunkslistText)
         
         #return response

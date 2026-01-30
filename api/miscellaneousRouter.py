@@ -6,14 +6,22 @@
 # ...
 
 from fastapi import APIRouter, File, UploadFile
-from services.miscellaneousService import extract_text_from_pdf, split_text_into_chunks
+from services.miscellaneousService import extract_text_from_pdf, split_text_into_chunks, extract_text_from_txt
 from services.embeddingsService import embeddingsService
 
 router = APIRouter()
 
-@router.post('/api/miscellaneous/pdf', summary="SERVIÇO: Extrair texto de arquivo PDF (extract text from a PDF)")
+# Função para extrair o texto de arquivos PDF
+@router.post('/api/miscellaneous/pdf', summary="SERVIÇO: Extrair texto de arquivo PDF (extract text from a PDF file)")
 async def pdf_to_text(filepdf: UploadFile = File(...)):
     response = extract_text_from_pdf(filepdf)
+
+    return response
+
+# Função para extrair o texto de arquivos TXT
+@router.post('/api/miscellaneous/txt', summary="SERVIÇO: Extrair texto de arquivo TXT (extract text from a TXT file)")
+async def txt_to_text(filetxt: UploadFile = File(...)):
+    response = extract_text_from_txt(filetxt)
 
     return response
 

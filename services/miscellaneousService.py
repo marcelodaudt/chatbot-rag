@@ -17,8 +17,21 @@ def extract_text_from_pdf(filepdf: UploadFile):
         text += page.extract_text()
     return text
 
-# Function to make SPLIT the text into chuncks
-def split_text_into_chunks(text: str, chunk_size=1000, overlap=200) -> list:
+# Function to extract text from a TXT File
+def extract_text_from_txt(filetxt: UploadFile):
+    # lê todo o arquivo e decodifica
+    content = filetxt.file.read()
+    
+    try:
+        # tenta UTF-8 (padrão mais comum)
+        text = content.decode("utf-8")
+    except UnicodeDecodeError:
+        text = content.decode("latin-1")
+    
+    return text
+
+# Function to make SPLIT the text into chuncks -> chunk_size=1000, overlap=200 para chunk_size=1400, overlap=300
+def split_text_into_chunks(text: str, chunk_size=1500, overlap=300) -> list:
     chunks = []
     for i in range(0, len(text), chunk_size - overlap):
         chunks.append(text[i:i + chunk_size])
