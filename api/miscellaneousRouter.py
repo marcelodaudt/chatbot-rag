@@ -26,14 +26,14 @@ async def txt_to_text(filetxt: UploadFile = File(...)):
     return response
 
 # Função que quebra o texto em partes (chunks)
-@router.post('/api/miscellaneous/split_in_chunks', summary="SERVIÇO: Quebrando o texte em pedaços (split text into chuncks).")
+@router.post('/api/miscellaneous/split_in_chunks', summary="SERVIÇO: Quebrando o texto em pedaços (split text into chuncks).")
 async def split_in_chunks_simple(text: str):
     response = split_text_into_chunks(text=text)
 
     return response
 
 # Função que quebra o texto em partes (chunks) e já vetoriza (embeddings)
-@router.post('/api/miscellaneous/split_in_chunks_embeddings', summary="SERVIÇO: Quebrando o texte em pedaços e criar uma lista de vetores (split text into chunks and create a list of embeddings).")
+@router.post('/api/miscellaneous/split_in_chunks_embeddings', summary="SERVIÇO: Quebrando o texto em pedaços e criar uma lista de vetores (split text into chunks and create a list of embeddings).")
 async def split_in_chunks_embeddings(text: str):
     chunks_list = split_text_into_chunks(text=text)
 
@@ -44,3 +44,4 @@ async def split_in_chunks_embeddings(text: str):
         return embeddings
     except Exception as e:
         return {"error": str(e)}
+

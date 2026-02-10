@@ -30,8 +30,8 @@ def extract_text_from_txt(filetxt: UploadFile):
     
     return text
 
-# Function to make SPLIT the text into chuncks -> chunk_size=1000, overlap=200 para chunk_size=1400, overlap=300
-def split_text_into_chunks(text: str, chunk_size=1500, overlap=300) -> list:
+# Function to make SPLIT the text into chuncks -> chunk_size=1000, overlap=200 para chunk_size=1500, overlap=300
+def split_text_into_chunks(text: str, chunk_size=2000, overlap=400) -> list:
     chunks = []
     for i in range(0, len(text), chunk_size - overlap):
         chunks.append(text[i:i + chunk_size])
