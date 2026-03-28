@@ -51,6 +51,10 @@ async def upsert(filetxt: UploadFile = File(...)):
     
     return response
 
+##########################################
+####### EXPERIMENTOS 1 a 4- INÍCIO #######
+##########################################
+
 # FUNÇÃO PARA INSERIR UM DOCUMENTO TXT + METADADOS - é feito o upload do arquivo, depois esse arquivo é quebrado em pedaços (chunks); depois, cada chunk é vetorizado (embedding) e inserido no banco (upsert).
 @router.post('/api/upsert/txt_metadata', summary="SERVIÇO: Inserindo (upsert) um documento TXT no Banco de Dados com Metadados (upsert a document TXT into the database with metadata).")
 async def upsert_metadata(filetxt: UploadFile = File(...), metadata: str = Form(...)):      # Form(...) = Formulário
@@ -68,6 +72,12 @@ async def upsert_metadata(filetxt: UploadFile = File(...), metadata: str = Form(
 
         return {"error": str(e)}
 
+####### EXPERIMENTOS 1 a 4- FINAL #######
+
+######################################
+####### EXPERIMENTO 5 - INÍCIO #######
+######################################
+
 # FUNÇÃO PARA INSERIR UM REGISTRO DE CHAMADO (arquivo TXT) - upload do arquivo, que será um chunk; depois esse chunck é vetorizado (embedding) e inserido no banco (upsert).
 @router.post('/api/upsert/txt_registro_metadata', summary="SERVIÇO: Inserindo (upsert) um registro de chamado de arquivo TXT no Banco de Dados com Metadados (upsert a register from TXT into the database with metadata).")
 async def upsert_registro_metadata(filetxt: UploadFile = File(...), metadata: str = Form(...)):
@@ -82,6 +92,8 @@ async def upsert_registro_metadata(filetxt: UploadFile = File(...), metadata: st
     except Exception as e:
 
         return {"error": str(e)}
+
+####### OU #######
 
 # FUNÇÃO PARA INSERIR VÁRIOS REGISTROS DE CHAMADO (vários arquivos TXT)
 @router.post('/api/upsert/multiple_txt_files', summary="SERVIÇO: Inserir múltiplos arquivos TXT no Banco de Dados Vetorial com Metadados")
@@ -149,3 +161,5 @@ async def extract_text_from_txt_async(filetxt: UploadFile):
     """
     content = await filetxt.read()
     return content.decode('utf-8')
+
+####### EXPERIMENTO 5 - FINAL #######
