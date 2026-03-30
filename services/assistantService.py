@@ -3,26 +3,61 @@ import json
 
 clientOpenAI = authentication_openai()
 
-def assistant_question(question: str, shortextract: str):
+def assistant_question(question: str, context_block: str):
     
     try:
-        # 1. Definimos a lista de mensagens em uma variável própria primeiro
+        # 1. PROMPT Final: montar o Prompt (estruturado) para enviar à LLM gerar a resposta
         prompt_messages = [
-            {"role": "system", "content": "You are a helpful support information technology assistant, which will respond only based on the excerpt (context) sent to you. If the context do not have the answer, say that you don't know."},
-            {"role": "user", "content": f"The question is {question} and the excerpt (context) is {shortextract}"},
+            {
+                "role": "system",
+                "content": """You are an IT support specialist.
+
+STRICT RULES:
+- You MUST answer ONLY using the provided contexts
+- If the contexts are empty, incomplete, or irrelevant, you MUST respond:
+  "I don't have enough information to answer this question based on the provided context."
+- DO NOT use prior knowledge
+- DO NOT guess
+- DO NOT infer beyond the context
+
+Be precise and technical when answering.
+Answering aways in Portuguese-BR.
+"""
+            },
+            {
+                "role": "user",
+                "content": f"""
+Question:
+{question}
+
+Contexts:
+{context_block if context_block else "NO_CONTEXT_AVAILABLE"}
+
+Answer:
+"""
+            }
         ]
 
-        # 2. Agora imprimimos a variável que criamos
-        print("--- PROMPT ENVIADO ---")
-        print(json.dumps(prompt_messages, indent=4, ensure_ascii=False))
-        print("----------------------")
+        # Debug
+        print("\n--- CONTEXT_BLOCK ---")
+        print(context_block)
+        print("----------------------\n")
 
-        # 3. Passamos a variável para a API
+        print("\n--- PROMPT ENVIADO ---")
+        print(prompt_messages)
+        print("----------------------\n")
+
+        if not context_block.strip():
+            return {
+                "answer": "Não encontrei informações suficientes na Base de Conhecimento para responder."
+            }
+
         response = clientOpenAI.chat.completions.create(
             model="gpt-4o-mini",
-            messages=prompt_messages
+            messages=prompt_messages,
+            temperature=0.1
         )
-        
+
         return response.choices[0].message.content
     
     except Exception as e:

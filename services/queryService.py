@@ -1,7 +1,7 @@
 from services.authenticationService import authentication_pinecone
 from services.embeddingsService import embeddingsService
 
-def query_simple(search: str):
+def query_simple(search: str, experiment: int = 5):
 
     pc = authentication_pinecone()
 
@@ -10,18 +10,17 @@ def query_simple(search: str):
         vectors = embeddingsService(search)
 
         # EXPERIMENTOS:
-        # Experimento 1
-        #index = pc.Index(host="https://experiment-1-knowledge-base-chunk-500-k6qbag2.svc.aped-4627-b74a.pinecone.io")
-        # Experimento 2
-        #index = pc.Index(host="https://experiment-2-knowledge-base-chunk-1000-k6qbag2.svc.aped-4627-b74a.pinecone.io")
-        # Experimento 3
-        #index = pc.Index(host="https://experiment-3-knowledge-base-chunk-2000-k6qbag2.svc.aped-4627-b74a.pinecone.io")
-        # Experimento 4
-        index = pc.Index(host="https://experiment-4-knowledge-base-chunk-1000-k6qbag2.svc.aped-4627-b74a.pinecone.io")
-        # Experimento 5
-        index = pc.Index(host="https://experiment-5-knowledge-base-chunk-by-call-k6qbag2.svc.aped-4627-b74a.pinecone.io")
+        INDEXES = {
+            1: "https://experiment-1-knowledge-base-chunk-500-k6qbag2.svc.aped-4627-b74a.pinecone.io",
+            2: "https://experiment-2-knowledge-base-chunk-1000-k6qbag2.svc.aped-4627-b74a.pinecone.io",
+            3: "https://experiment-3-knowledge-base-chunk-2000-k6qbag2.svc.aped-4627-b74a.pinecone.io",
+            4: "https://experiment-4-knowledge-base-chunk-1000-k6qbag2.svc.aped-4627-b74a.pinecone.io",
+            5: "https://experiment-5-knowledge-base-chunk-by-call-k6qbag2.svc.aped-4627-b74a.pinecone.io"
+        }
 
-        response = index.query(namespace="knowledge-base", vector=vectors, top_k=3, include_metadata=True)
+        index = pc.Index(host=INDEXES[experiment])
+
+        response = index.query(namespace="knowledge-base", vector=vectors, top_k=10, include_metadata=True)
         
         return response
     

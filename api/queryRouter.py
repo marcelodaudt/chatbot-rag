@@ -20,4 +20,4 @@ async def query(search: str):
         for match in matches
     ]
 
-    return jsonResponse
+    return jsonResponse   

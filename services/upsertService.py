@@ -34,13 +34,13 @@ def upsertService(embeddings: list):
 def upsertService_metadata(metadata: dict, chunkslistText: list):
 
     # Experimento 1
-    #index = pc.Index(host="https://experiment-1-knowledge-base-chunk-500-k6qbag2.svc.aped-4627-b74a.pinecone.io")
+    index = pc.Index(host="https://experiment-1-knowledge-base-chunk-500-k6qbag2.svc.aped-4627-b74a.pinecone.io")
     # Experimento 2
     #index = pc.Index(host="https://experiment-2-knowledge-base-chunk-1000-k6qbag2.svc.aped-4627-b74a.pinecone.io")
     # Experimento 3
     #index = pc.Index(host="https://experiment-3-knowledge-base-chunk-2000-k6qbag2.svc.aped-4627-b74a.pinecone.io")
     # Experimento 4
-    index = pc.Index(host="https://experiment-4-knowledge-base-chunk-1000-k6qbag2.svc.aped-4627-b74a.pinecone.io")
+    #index = pc.Index(host="https://experiment-4-knowledge-base-chunk-1000-k6qbag2.svc.aped-4627-b74a.pinecone.io")
 
     try:
 
@@ -82,7 +82,7 @@ def upsertService_registro_metadata(metadata: dict, chunk: str):
         metadatacomplete = {**metadata, "chunk": chunk}
         vectors.append({"id": f"{uuid.uuid4()}", "values": embeddingchunk, "metadata": metadatacomplete})
         
-        response = index.upsert(vectors=vectors, namespace="ti-suporte-desenvolvimento")
+        response = index.upsert(vectors=vectors, namespace="knowledge-base")
 
         return response.upserted_count
     

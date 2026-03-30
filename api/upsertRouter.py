@@ -1,4 +1,4 @@
-from fastapi import APIRouter, File, UploadFile, Form
+from fastapi import APIRouter, UploadFile, File, Form, HTTPException
 from services.miscellaneousService import extract_text_from_pdf, extract_text_from_txt
 from api.miscellaneousRouter import split_in_chunks_embeddings, split_in_chunks_simple
 from services.upsertService import upsertService, upsertService_metadata, upsertService_registro_metadata
@@ -8,6 +8,7 @@ import uuid
 import asyncio
 from typing import List
 from services.embeddingsService import embeddingsService
+from fastapi import APIRouter, UploadFile, File, Form, HTTPException
 
 router = APIRouter()
 
@@ -162,4 +163,46 @@ async def extract_text_from_txt_async(filetxt: UploadFile):
     content = await filetxt.read()
     return content.decode('utf-8')
 
+#################
+# NOVA FUNÇÃO PARA INSERIR VÁRIOS REGISTROS DE CHAMADO (vários arquivos TXT)
+@router.post('/api/upsert/folder_upload', summary="SERVIÇO: NOVA FUNÇÃO para inserir múltiplos arquivos TXT  (FOLDER) no Banco de Dados Vetorial com Metadados")
+async def upsert_from_folder(
+    # O segredo está aqui: o navegador enviará uma lista de arquivos
+    files: List[UploadFile] = File(...), 
+    metadata: str = Form(...)
+):
+    try:
+        # 1. Carrega os metadados (que serão aplicados a todos os arquivos)
+        import json
+        metadata_dict = json.loads(metadata)
+
+        # 2. Criamos as tarefas para processar todos os arquivos em paralelo
+        # Isso evita que o processo seja lento se você selecionar 50 arquivos
+        tasks = [process_and_upsert(f, metadata_dict) for f in files]
+        
+        # 3. Executa tudo simultaneamente
+        results = await asyncio.gather(*tasks)
+
+        return {
+            "message": f"Processados {len(files)} arquivos com sucesso.",
+            "details": results
+        }
+
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Erro geral: {str(e)}")
+
+async def process_and_upsert(file: UploadFile, metadata: dict):
+    """Função auxiliar para processar cada arquivo da lista"""
+    try:
+        content = await file.read()
+        text = content.decode('utf-8')
+        
+        # Chama sua função de persistência (Pinecone/OpenAI)
+        # Se 'upsertService_registro_metadata' for síncrona, ela roda aqui
+        result = upsertService_registro_metadata(metadata=metadata, chunk=text)
+        
+        return {"file": file.filename, "status": "success"}
+    except Exception as e:
+        return {"file": file.filename, "status": "error", "reason": str(e)}
+    
 ####### EXPERIMENTO 5 - FINAL #######
