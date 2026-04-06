@@ -1,7 +1,7 @@
 from services.authenticationService import authentication_pinecone
 from services.embeddingsService import embeddingsService
 
-def query_simple(search: str, experiment: int = 5):
+def query_simple(search: str, experiment: int = 2):
 
     pc = authentication_pinecone()
 

@@ -8,16 +8,20 @@ router = APIRouter()
 # -----------------------------
 # Funções auxiliares
 # -----------------------------
+
+# Função para limpar o texto
 def clean_text(text: str) -> str:
     text = re.sub(r'\s+', ' ', text)       # remove quebras e tabs
     text = re.sub(r'<.*?>', '', text)      # remove HTML
     return text.strip()
 
+# Função para filtrar por palavras-chave da pergunta
 def is_relevant(text: str, query: str) -> bool:
     query_terms = query.lower().split()
     text_lower = text.lower()
     return any(term in text_lower for term in query_terms)
 
+# Função para remover redundância
 def deduplicate(matches):
     seen = set()
     unique = []
